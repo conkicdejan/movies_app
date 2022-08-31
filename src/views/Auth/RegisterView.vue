@@ -65,8 +65,7 @@
 <script setup>
 import { reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/store/AuthStore';
-import AuthService from '../services/AuthService';
+import AuthService from '../../services/AuthService';
 import useVuelidate from '@vuelidate/core';
 import {
   required,
@@ -76,7 +75,6 @@ import {
   maxLength,
 } from '@vuelidate/validators';
 
-const authStore = useAuthStore();
 const router = useRouter();
 const form = reactive({
   name: '',

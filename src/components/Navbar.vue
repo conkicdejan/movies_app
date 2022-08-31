@@ -4,8 +4,13 @@
       <div class="navbar-nav align-items-baseline">
         <h4 class="navbar-brand">Movies app</h4>
 
-        <!-- public route -->
-        <router-link class="nav-link" to="/">Home</router-link>
+        <!-- private route -->
+        <div class="navbar-nav" v-if="authStore.user">
+          <router-link class="nav-link" to="/movies">Home</router-link>
+          <router-link class="nav-link" to="/movies/create"
+            >Create movie</router-link
+          >
+        </div>
       </div>
 
       <!-- private route -->

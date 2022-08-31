@@ -40,7 +40,7 @@
 import { reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/store/AuthStore';
-import AuthService from '../services/AuthService';
+import AuthService from '../../services/AuthService';
 import useVuelidate from '@vuelidate/core';
 import { required, email, minLength } from '@vuelidate/validators';
 
@@ -59,7 +59,7 @@ const handleSubmit = async () => {
     try {
       const data = await AuthService.login(form);
       authStore.login(data);
-      router.push({ name: 'home', replace: true });
+      router.push({ name: 'indexMovie', replace: true });
     } catch (error) {
       console.log(error);
       form.error = error?.response?.data?.errors;
