@@ -5,6 +5,18 @@
 
 <script setup>
 import Navbar from './components/Navbar.vue';
+import { onBeforeMount } from 'vue';
+import { useCategoriesStore } from '@/store/CategoriesStore';
+import CategoriesService from './services/CategoriesService';
+const categoryStore = useCategoriesStore();
+onBeforeMount(async () => {
+  try {
+    const data = await CategoriesService.get();
+    categoryStore.setCategories(data);
+  } catch (error) {
+    console.log(error);
+  }
+});
 </script>
 
 <style>

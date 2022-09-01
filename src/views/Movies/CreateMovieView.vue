@@ -70,9 +70,9 @@
 
 <script setup>
 import { useCategoriesStore } from '@/store/CategoriesStore';
-import CategoriesService from '../../services/CategoriesService';
+
 import MoviesService from '../../services/MoviesService';
-import { reactive, computed, onBeforeMount } from 'vue';
+import { reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import useVuelidate from '@vuelidate/core';
 import {
@@ -107,15 +107,6 @@ const handleSubmit = async () => {
   }
 };
 
-onBeforeMount(async () => {
-  try {
-    const data = await CategoriesService.get();
-    categoryStore.setCategories(data);
-  } catch (error) {
-    console.log(error);
-  }
-});
-
 // Vuelidate - rules
 const imageRule = helpers.regex(/\.(gif|jpe?g|png)$/);
 
@@ -131,7 +122,7 @@ const rules = computed(() => ({
       imageRule
     ),
   },
-  category_id: { integer },
+  category_id: { required, integer },
 }));
 const v$ = useVuelidate(rules, form);
 </script>
