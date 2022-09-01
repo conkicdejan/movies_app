@@ -6,8 +6,16 @@ class MoviesService extends HttpService {
     return data;
   };
 
-  get = async ({page}) => {
-    const { data } = await this.client.get(`/movies?page=${page}`);
+  get = async (params) => {
+    let composedParams = [];
+    for (const param in params) {
+      if (params[param]) {
+        composedParams.push(`${param}=${params[param]}`);
+      }
+    }
+    const { data } = await this.client.get(
+      `/movies?${composedParams.join('&')}`
+    );
     return data;
   };
 
