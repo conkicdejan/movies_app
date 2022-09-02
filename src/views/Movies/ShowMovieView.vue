@@ -11,6 +11,11 @@
       alt="Image"
       class="img-thumbnail h200"
     />
+    <br />
+    <p class="badge text-bg-success mt-3">Visited: {{ state.movie.visited }}</p>
+    <br />
+    <!-- Like component -->
+    <MovieLike :movie="state.movie" />
   </div>
 </template>
 
@@ -19,6 +24,7 @@ import { reactive, computed, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 import MoviesService from '../../services/MoviesService';
 import MoviesList from '@/components/Movies/MoviesList.vue';
+import MovieLike from '../../components/Movies/MovieLike.vue';
 const route = useRoute();
 
 const movieId = route.params.id;

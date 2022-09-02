@@ -28,6 +28,11 @@ class MoviesService extends HttpService {
     const { data } = await this.client.delete(`/movies/${movie}`);
     return data;
   };
+
+  update = async (movie, update) => {
+    const { data } = await this.client.put(`/movies/${movie}`, update);
+    return data;
+  };
 }
 
 export default new MoviesService();
