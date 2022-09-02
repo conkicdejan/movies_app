@@ -34,7 +34,7 @@
               class="form-control"
               placeholder="search"
               v-model="search"
-              @input="debounceSearch"
+              @input="debounceMethod"
             />
             <div class="input-group-append">
               <button
@@ -88,6 +88,7 @@ import VPagination from '@hennge/vue3-pagination';
 import '@hennge/vue3-pagination/dist/vue3-pagination.css';
 import MoviesList from '@/components/Movies/MoviesList.vue';
 import { useCategoriesStore } from '@/store/CategoriesStore';
+import DebounceComponent from '../../components/DebounceComponent.vue'
 
 //Stores define
 const categoryStore = useCategoriesStore();
@@ -95,12 +96,12 @@ const moviesStore = useMoviesStore();
 
 //Search handler
 const search = ref(null);
-const debounceSearch = (event) => {
-  setTimeout(() => {
-    moviesStore.search = event.target.value;
+
+const debounceMethod = _.debounce((event) => {
+  moviesStore.search = event.target.value;
     moviesStore.current_page = 1;
-  }, 750);
-};
+}, 750);
+
 const handleClearSearch = () => {
   search.value = null;
   moviesStore.search = null;
