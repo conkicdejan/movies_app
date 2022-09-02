@@ -73,6 +73,7 @@ import {
   sameAs,
   minLength,
   maxLength,
+  helpers,
 } from '@vuelidate/validators';
 
 const router = useRouter();
@@ -102,7 +103,16 @@ const handleSubmit = async () => {
 const rules = computed(() => ({
   name: { required, maxLength: maxLength(255) },
   email: { required, email },
-  password: { required, minLength: minLength(8) },
+  password: {
+    required,
+    minLength: minLength(8),
+    containsPasswordRequirement: helpers.withMessage(
+      () =>
+        `The password requires an uppercase, lowercase, number and special character`,
+      (value) =>
+        /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/.test(value)
+    ),
+  },
   password_confirmation: {
     required,
     sameAsPassword: sameAs(form.password),
