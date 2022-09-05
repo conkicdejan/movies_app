@@ -17,7 +17,7 @@
 
       <label for="description" class="form-label"> Description </label>
       <textarea
-        className="form-control mb-3"
+        class="form-control mb-3"
         name="description"
         id="description"
         rows="4"
