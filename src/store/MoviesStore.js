@@ -8,6 +8,7 @@ export const useMoviesStore = defineStore('MoviesStore', {
       current_page: 1,
       search: null,
       category: null,
+      my_movies: false,
     };
   },
   actions: {
