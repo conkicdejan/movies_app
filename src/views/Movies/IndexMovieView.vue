@@ -22,8 +22,21 @@
           <MoviesList />
         </div>
 
-        <!-- Categories, Search, Result -->
+        <!-- Categories, Search, Result, My List -->
         <div class="col-3">
+          <!-- My list checkbox-->
+          <div class="form-check align-left">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="mylistcheckbox"
+              v-model="moviesStore.my_movies"
+            />
+            <label class="form-check-label" for="mylistcheckbox">
+              My movies
+            </label>
+          </div>
+
           <!-- Result (total movies found)-->
           Movies found: {{ moviesStore.movies.total }}
 
@@ -88,7 +101,7 @@ import VPagination from '@hennge/vue3-pagination';
 import '@hennge/vue3-pagination/dist/vue3-pagination.css';
 import MoviesList from '@/components/Movies/MoviesList.vue';
 import { useCategoriesStore } from '@/store/CategoriesStore';
-import DebounceComponent from '../../components/DebounceComponent.vue'
+import DebounceComponent from '../../components/DebounceComponent.vue';
 
 //Stores define
 const categoryStore = useCategoriesStore();
@@ -99,7 +112,7 @@ const search = ref(null);
 
 const debounceMethod = _.debounce((event) => {
   moviesStore.search = event.target.value;
-    moviesStore.current_page = 1;
+  moviesStore.current_page = 1;
 }, 750);
 
 const handleClearSearch = () => {
@@ -120,6 +133,7 @@ watchEffect(async () => {
       page: moviesStore.current_page,
       category: moviesStore.category,
       search: moviesStore.search,
+      my_movies: moviesStore.my_movies,
     });
     moviesStore.setMovies(data);
   } catch (error) {
@@ -132,5 +146,8 @@ watchEffect(async () => {
 .search {
   width: 200px;
   height: 40px;
+}
+.align-left {
+  text-align: left;
 }
 </style>

@@ -15,7 +15,7 @@
     <p class="badge text-bg-success mt-3">Visited: {{ state.movie.visited }}</p>
     <br />
     <!-- Like component -->
-    <MovieLike :movie="state.movie" />
+    <MovieActions :movie="state.movie" />
     <CommentsList :comments="state.comments" @loadMore="handleLoadMore" />
     <CommentForm :movieId="movieId" @commentAdded="update" />
   </div>
@@ -25,10 +25,9 @@
 import { reactive, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 import MoviesService from '../../services/MoviesService';
-import MoviesList from '@/components/Movies/MoviesList.vue';
-import MovieLike from '../../components/Movies/MovieLike.vue';
 import CommentsList from '@/components/Comments/CommentsList.vue';
 import CommentForm from '@/components/Comments/CommentForm.vue';
+import MovieActions from '../../components/Movies/MovieActions.vue';
 
 const route = useRoute();
 
