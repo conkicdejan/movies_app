@@ -1,47 +1,68 @@
 <template>
-  <div class="container" v-if="state.movie.title">
-    <div class="d-flex mt-1">
-      <h3 class="flex-grow-1">{{ state.movie.title }}</h3>
+  <div class="container">
+    <div class="row">
+      <!-- Aside list -->
+      <div class="col-2 mt-4">
+        <h4>Related movies</h4>
+        <Aside
+          :category="state.movie.category.id"
+          :key="state.movie.category.id"
+        />
+      </div>
+      <div class="container- col-10" v-if="state.movie.title">
+        <div class="d-flex mt-1">
+          <h3 class="flex-grow-1">{{ state.movie.title }}</h3>
+        </div>
+        <p>{{ state.movie.description }}</p>
+        <p class="badge text-bg-warning">{{ state.movie.category.name }}</p>
+        <br />
+        <img
+          v-bind:src="state.movie.cover_image"
+          alt="Image"
+          class="img-thumbnail h200"
+        />
+        <br />
+        <p class="badge text-bg-success mt-3">
+          Visited: {{ state.movie.visited }}
+        </p>
+        <br />
+        <!-- Like component -->
+        <MovieActions :movie="state.movie" />
+        <CommentsList :comments="state.comments" @loadMore="handleLoadMore" />
+        <CommentForm :movieId="state.movieId" @commentAdded="update" />
+      </div>
     </div>
-    <p>{{ state.movie.description }}</p>
-    <p class="badge text-bg-warning">{{ state.movie.category.name }}</p>
-    <br />
-    <img
-      v-bind:src="state.movie.cover_image"
-      alt="Image"
-      class="img-thumbnail h200"
-    />
-    <br />
-    <p class="badge text-bg-success mt-3">Visited: {{ state.movie.visited }}</p>
-    <br />
-    <!-- Like component -->
-    <MovieActions :movie="state.movie" />
-    <CommentsList :comments="state.comments" @loadMore="handleLoadMore" />
-    <CommentForm :movieId="movieId" @commentAdded="update" />
   </div>
 </template>
 
 <script setup>
-import { reactive, onBeforeMount } from 'vue';
+import { ref, reactive, onBeforeMount, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import MoviesService from '../../services/MoviesService';
 import CommentsList from '@/components/Comments/CommentsList.vue';
 import CommentForm from '@/components/Comments/CommentForm.vue';
 import MovieActions from '../../components/Movies/MovieActions.vue';
+import Aside from '@/components/Aside.vue';
 
 const route = useRoute();
-
-const movieId = route.params.id;
 
 const state = reactive({
   movie: {
     title: '',
     description: '',
-    category: { name: '' },
+    category: { id: null, name: '' },
     cover_image: '',
   },
   comments: [],
   current_page: 1,
+  movieId: route.params.id,
+});
+
+watch(route, (to) => {
+  if (to.params.id) {
+    state.movieId = to.params.id;
+    update();
+  }
 });
 
 const handleLoadMore = () => {
@@ -57,7 +78,7 @@ const update = async (data) => {
   //Fetch data
   try {
     const { movie, comments } = await MoviesService.show({
-      id: movieId,
+      id: state.movieId,
       page: state.current_page,
     });
     state.movie = movie;
