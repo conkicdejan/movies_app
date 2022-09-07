@@ -25,7 +25,7 @@
 
         <!-- Movies list -->
         <div class="col-8">
-          <MoviesList :key="moviesStore" />
+          <MoviesList :key="movies" />
         </div>
 
         <!-- Categories, Search, Result, My List -->
@@ -109,10 +109,12 @@ import MoviesList from '@/components/Movies/MoviesList.vue';
 import Aside from '@/components/Aside.vue';
 import { useCategoriesStore } from '@/store/CategoriesStore';
 import DebounceComponent from '../../components/DebounceComponent.vue';
+import { storeToRefs } from 'pinia';
 
 //Stores define
 const categoryStore = useCategoriesStore();
 const moviesStore = useMoviesStore();
+const { movies } = storeToRefs(moviesStore);
 
 //Search handler
 const search = ref(null);
@@ -143,6 +145,7 @@ watchEffect(async () => {
       my_movies: moviesStore.my_movies,
     });
     moviesStore.setMovies(data);
+    console.log(movies)
   } catch (error) {
     console.log(error);
   }
