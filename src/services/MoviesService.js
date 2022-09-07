@@ -19,6 +19,18 @@ class MoviesService extends HttpService {
     return data;
   };
 
+  getTopMovies = async () => {
+    const { data } = await this.client.get('/movies/topmovies');
+    return data;
+  };
+
+  getRelatedMovies = async (category) => {
+    const { data } = await this.client.get('/movies/relatedmovies', {
+      params: category,
+    });
+    return data;
+  };
+
   show = async ({ id, page }) => {
     const { data } = await this.client.get(`/movies/${id}/?page=${page}`);
     return data;

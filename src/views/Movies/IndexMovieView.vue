@@ -17,13 +17,19 @@
 
     <div class="container">
       <div class="row">
+        <!-- Aside list -->
+        <div class="col-2 mt-4">
+          <h4>Top movies</h4>
+          <Aside />
+        </div>
+
         <!-- Movies list -->
-        <div class="col-9">
-          <MoviesList />
+        <div class="col-8">
+          <MoviesList :key="moviesStore" />
         </div>
 
         <!-- Categories, Search, Result, My List -->
-        <div class="col-3">
+        <div class="col-2">
           <!-- My list checkbox-->
           <div class="form-check align-left">
             <input
@@ -100,6 +106,7 @@ import MoviesService from '../../services/MoviesService';
 import VPagination from '@hennge/vue3-pagination';
 import '@hennge/vue3-pagination/dist/vue3-pagination.css';
 import MoviesList from '@/components/Movies/MoviesList.vue';
+import Aside from '@/components/Aside.vue';
 import { useCategoriesStore } from '@/store/CategoriesStore';
 import DebounceComponent from '../../components/DebounceComponent.vue';
 
