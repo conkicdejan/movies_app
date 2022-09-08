@@ -2,6 +2,24 @@
   <div class="container w-50">
     <h3>Create movie</h3>
 
+    <!-- Search for movie from OMDB-->
+    <div class="my-2">
+      <v-select
+        @search="fetchOptions"
+        :options="form.omdbMovies"
+        @change="handleSelectMovie"
+        label="Title"
+        v-model="form.selectedId"
+        value="selectedValue"
+        :reduce="(Title) => Title.imdbID"
+        :filterable="false"
+        :selectOnTab="true"
+        :resetOnOptionsChange="false"
+        :placeholder="'search for movies'"
+        :clearSearchOnSelect="true"
+      />
+    </div>
+
     <form @submit.prevent="handleSubmit">
       <label for="title" class="form-label"> Title </label>
       <input
@@ -70,9 +88,10 @@
 
 <script setup>
 import { useCategoriesStore } from '@/store/CategoriesStore';
-
+import DebounceComponent from '../../components/DebounceComponent.vue';
 import MoviesService from '../../services/MoviesService';
-import { reactive, computed } from 'vue';
+import OmdbService from '../../services/OmdbService';
+import { reactive, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import useVuelidate from '@vuelidate/core';
 import {
@@ -91,8 +110,44 @@ const form = reactive({
   cover_image: '',
   category_id: '',
   errors: [],
+  omdbMovies: [],
+  selectedId: null,
 });
+const selectedValue = ref('');
 
+//Search & fetch movies
+const fetchOptions = (search, loading) => {
+  if (search.length) {
+    loading(true);
+    debounceMethod(search);
+    loading(false);
+  }
+};
+const debounceMethod = _.debounce(async (search) => {
+  const data = await OmdbService.search(search);
+  form.omdbMovies = data.Search;
+  console.log('data', data.Search);
+}, 750);
+
+//Select movie from OMDB and fill the form
+const handleSelectMovie = async () => {
+  const data = await OmdbService.get(form.selectedId);
+  console.log('data', data);
+  form.title = data.Title;
+  form.description = data.Plot;
+  form.cover_image = data.Poster;
+  form.category_id = findCategoryId(data.Genre);
+};
+
+//Find category ID from string
+const findCategoryId = (stringCategories) => {
+  const stringCategory = stringCategories.split(',').shift();
+  return categoryStore.categories.filter(
+    (category) => category.name === stringCategory
+  )[0]?.id;
+};
+
+// Create new movie
 const handleSubmit = async () => {
   form.errors = [];
   const validated = await v$.value.$validate();

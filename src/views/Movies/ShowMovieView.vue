@@ -5,8 +5,8 @@
       <div class="col-2 mt-4">
         <h4>Related movies</h4>
         <Aside
-          :category="state.movie.category.id"
-          :key="state.movie.category.id"
+          :category="state.movie.category?.id"
+          :key="state.movie.category?.id"
         />
       </div>
       <div class="container- col-10" v-if="state.movie.title">
@@ -14,7 +14,11 @@
           <h3 class="flex-grow-1">{{ state.movie.title }}</h3>
         </div>
         <p>{{ state.movie.description }}</p>
-        <p class="badge text-bg-warning">{{ state.movie.category.name }}</p>
+        <p class="badge text-bg-warning">
+          {{
+            state.movie.category?.name ? state.movie.category.name : 'undefined'
+          }}
+        </p>
         <br />
         <img
           v-bind:src="state.movie.cover_image"

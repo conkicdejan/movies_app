@@ -19,7 +19,7 @@
           </p>
           <!-- Show category -->
           <p class="badge text-bg-warning my-0 mx-2">
-            {{ state.movie.category.name }}
+            {{ state.movie.category?.name ? state.movie.category.name : 'undefined'}}
           </p>
           <!-- Show number of visits -->
           <p class="badge text-bg-success my-0 mx-2">
@@ -58,5 +58,8 @@ li {
 }
 .card-text {
   height: 40px;
+}
+.card-img-top{
+object-fit: contain;
 }
 </style>
