@@ -31,7 +31,7 @@
         </p>
         <br />
         <!-- Like component -->
-        <MovieActions :movie="state.movie" />
+        <MovieActions :movie="state.movie" :key="state.movie.total_likes" />
         <CommentsList :comments="state.comments" @loadMore="handleLoadMore" />
         <CommentForm :movieId="state.movieId" @commentAdded="update" />
       </div>
@@ -40,7 +40,15 @@
 </template>
 
 <script setup>
-import { ref, reactive, onBeforeMount, watch, watchEffect } from 'vue';
+import {
+  reactive,
+  onBeforeMount,
+  watch,
+  onMounted,
+  onUpdated,
+  onAfterUpdated,
+  onBeforeUnmount,
+} from 'vue';
 import { useRoute } from 'vue-router';
 import MoviesService from '../../services/MoviesService';
 import CommentsList from '@/components/Comments/CommentsList.vue';
@@ -64,8 +72,10 @@ const state = reactive({
 
 watch(route, (to) => {
   if (to.params.id) {
+    Echo.leave(`movie.${state.movieId}`);
     state.movieId = to.params.id;
     update();
+    listen();
   }
 });
 
@@ -98,6 +108,23 @@ const update = async (data) => {
     console.log(error);
   }
 };
+
+const listen = () => {
+  Echo.channel(`movie.${state.movieId}`)
+    .listen('NewComment', ({ comment }) => {
+      state.comments.data.unshift(comment);
+    })
+    .listen('LikeUpdate', ({ movie }) => {
+      state.movie.total_likes = movie.total_likes;
+      state.movie.total_dislikes = movie.total_dislikes;
+      console.log(state.movie.total_likes);
+      console.log(state.movie.total_dislikes);
+    });
+};
+
+onMounted(() => {
+  listen();
+});
 
 onBeforeMount(() => {
   update();
