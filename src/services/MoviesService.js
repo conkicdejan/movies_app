@@ -2,7 +2,11 @@ import HttpService from './HttpService';
 
 class MoviesService extends HttpService {
   create = async (newMovie) => {
-    const { data } = await this.client.post('/movies', newMovie);
+    const { data } = await this.client.post('/movies', newMovie, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return data;
   };
 

@@ -45,21 +45,9 @@
         <div class="error">{{ error.$message }}</div>
       </div>
 
-      <label for="cover_image" class="form-label"> Image </label>
-      <input
-        class="form-control mb-1"
-        type="text"
-        id="cover_image"
-        name="cover_image"
-        v-model="form.cover_image"
-      />
-      <div v-for="error of v$.cover_image.$errors" :key="error.$uid">
-        <div class="error">{{ error.$message }}</div>
-      </div>
-
       <label for="category_id" class="form-label"> Category </label>
       <select
-        class="form-select"
+        class="form-select mb-3"
         id="category_id"
         name="category_id"
         v-model="form.category_id"
@@ -74,6 +62,18 @@
         </option>
       </select>
       <div v-for="error of v$.category_id.$errors" :key="error.$uid">
+        <div class="error">{{ error.$message }}</div>
+      </div>
+
+      <label for="image" class="form-label"> Image </label>
+      <input
+        class="form-control mb-3"
+        type="file"
+        id="image"
+        @change="handleImageUpload($event)"
+        accept="image/png, image/jpeg"
+      />
+      <div v-for="error of v$.image.$errors" :key="error.$uid">
         <div class="error">{{ error.$message }}</div>
       </div>
 
@@ -107,8 +107,8 @@ const router = useRouter();
 const form = reactive({
   title: '',
   description: '',
-  cover_image: '',
   category_id: '',
+  image: null,
   errors: [],
   omdbMovies: [],
   selectedId: null,
@@ -135,7 +135,6 @@ const handleSelectMovie = async () => {
   console.log('data', data);
   form.title = data.Title;
   form.description = data.Plot;
-  form.cover_image = data.Poster;
   form.category_id = findCategoryId(data.Genre);
 };
 
@@ -145,6 +144,11 @@ const findCategoryId = (stringCategories) => {
   return categoryStore.categories.filter(
     (category) => category.name === stringCategory
   )[0]?.id;
+};
+
+//Handle image upload
+const handleImageUpload = (event) => {
+  form.image = event.target.files[0];
 };
 
 // Create new movie
@@ -163,19 +167,12 @@ const handleSubmit = async () => {
 };
 
 // Vuelidate - rules
-const imageRule = helpers.regex(/\.(gif|jpe?g|png)$/);
-
 const rules = computed(() => ({
   title: { required, maxLength: maxLength(255) },
   description: { required, maxLength: maxLength(1000) },
-  cover_image: {
+  image: {
     required,
-    url,
-    maxLength: maxLength(2000),
-    imageRule: helpers.withMessage(
-      'The extension must be .gif .jpg .jpeg .png',
-      imageRule
-    ),
+    //Validation file type is set in the template : accept="image/png, image/jpeg"
   },
   category_id: { required, integer },
 }));

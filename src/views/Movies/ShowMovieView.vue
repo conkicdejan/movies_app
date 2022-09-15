@@ -21,7 +21,7 @@
         </p>
         <br />
         <img
-          v-bind:src="state.movie.cover_image"
+          :src="image_server + state.movie.full_size"
           alt="Image"
           class="img-thumbnail h200"
         />
@@ -57,6 +57,7 @@ import MovieActions from '../../components/Movies/MovieActions.vue';
 import Aside from '@/components/Aside.vue';
 
 const route = useRoute();
+const image_server = process.env.VUE_APP_IMAGE_SERVER;
 
 const state = reactive({
   movie: {
@@ -64,6 +65,7 @@ const state = reactive({
     description: '',
     category: { id: null, name: '' },
     cover_image: '',
+    full_size: '',
   },
   comments: [],
   current_page: 1,

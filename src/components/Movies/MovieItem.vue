@@ -5,7 +5,7 @@
         <router-link :to="`/movies/${state.movie.id}`">
           <!-- Show cover image -->
           <img
-            v-bind:src="state.movie.cover_image"
+            :src="image_server + state.movie.thumbnail"
             alt="`Image: ${movie.cover_image}`"
             class="card-img-top"
           />
@@ -39,6 +39,7 @@ import MovieActions from './MovieActions.vue';
 import { reactive } from 'vue';
 const { movie } = defineProps(['movie']);
 const state = reactive({ movie });
+const image_server = process.env.VUE_APP_IMAGE_SERVER;
 </script>
 
 <style>
@@ -60,6 +61,6 @@ li {
   height: 40px;
 }
 .card-img-top{
-object-fit: contain;
+  object-fit: contain;
 }
 </style>
